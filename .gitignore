@@ -1,68 +1,125 @@
-gram representing the Customer class with the specified attributes:
-import java.time.LocalDate;
+const keys = document.querySelectorAll('.key');
+const display_input = document.querySelector('.display .input');
+const display_output = document.querySelector('.display .output');
 
-public class Customer {
-    // Attributes
-    private int customerId;
-    private String customerName;
-    private String accountNumber;
-    private LocalDate dateOfBirth;
-    private String bvn;
-    private String phoneNumber;
-    private String emailAddress;
+let input = "";
 
-    // Constructor
-    public Customer(int customerId, String customerName, String accountNumber, LocalDate dateOfBirth, String bvn, String phoneNumber, String emailAddress) {
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.accountNumber = accountNumber;
-        this.dateOfBirth = dateOfBirth;
-        this.bvn = bvn;
-        this.phoneNumber = phoneNumber;
-        this.emailAddress = emailAddress;
-    }
+for (let key of keys) {
+	const value = key.dataset.key;
 
-    // Getter methods
-    public int getCustomerId() {
-        return customerId;
-    }
+	key.addEventListener('click', () => {
+		if (value == "clear") {
+			input = "";
+			display_input.innerHTML = "";
+			display_output.innerHTML = "";
+		} else if (value == "backspace") {
+			input = input.slice(0, -1);
+			display_input.innerHTML = CleanInput(input);
+		} else if (value == "=") {
+			let result = eval(PerpareInput(input));
 
-    public String getCustomerName() {
-        return customerName;
-    }
+			display_output.innerHTML = CleanOutput(result);
+		} else if (value == "brackets") {
+			if (
+				input.indexOf("(") == -1 || 
+				input.indexOf("(") != -1 && 
+				input.indexOf(")") != -1 && 
+				input.lastIndexOf("(") < input.lastIndexOf(")")
+			) {
+				input += "(";
+			} else if (
+				input.indexOf("(") != -1 && 
+				input.indexOf(")") == -1 || 
+				input.indexOf("(") != -1 &&
+				input.indexOf(")") != -1 &&
+				input.lastIndexOf("(") > input.lastIndexOf(")")
+			) {
+				input += ")";
+			}
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
+			display_input.innerHTML = CleanInput(input);
+		} else {
+			if (ValidateInput(value)) {
+				input += value;
+				display_input.innerHTML = CleanInput(input);
+			}
+		}
+	})
+}
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
+function CleanInput(input) {
+	let input_array = input.split("");
+	let input_array_length = input_array.length;
 
-    public String getBvn() {
-        return bvn;
-    }
+	for (let i = 0; i < input_array_length; i++) {
+		if (input_array[i] == "*") {
+			input_array[i] = ` <span class="operator">x</span> `;
+		} else if (input_array[i] == "/") {
+			input_array[i] = ` <span class="operator">÷</span> `;
+		} else if (input_array[i] == "+") {
+			input_array[i] = ` <span class="operator">+</span> `;
+		} else if (input_array[i] == "-") {
+			input_array[i] = ` <span class="operator">-</span> `;
+		} else if (input_array[i] == "(") {
+			input_array[i] = `<span class="brackets">(</span>`;
+		} else if (input_array[i] == ")") {
+			input_array[i] = `<span class="brackets">)</span>`;
+		} else if (input_array[i] == "%") {
+			input_array[i] = `<span class="percent">%</span>`;
+		}
+	}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	return input_array.join("");
+}
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
+function CleanOutput (output) {
+	let output_string = output.toString();
+	let decimal = output_string.split(".")[1];
+	output_string = output_string.split(".")[0];
 
-    // Main method for testing
-    public static void main(String[] args) {
-        // Create a customer object
-        Customer customer = new Customer(1, "John Doe", "1234567890", LocalDate.of(1990, 5, 15), "12345678901234567", "123-456-7890", "john.doe@example.com");
+	let output_array = output_string.split("");
+	
+	if (output_array.length > 3) {
+		for (let i = output_array.length - 3; i > 0; i -= 3) {
+			output_array.splice(i, 0, ",");
+		}
+	}
 
-        // Print customer details
-        System.out.println("Customer ID: " + customer.getCustomerId());
-        System.out.println("Customer Name: " + customer.getCustomerName());
-        System.out.println("Account Number: " + customer.getAccountNumber());
-        System.out.println("Date of Birth: " + customer.getDateOfBirth());
-        System.out.println("BVN: " + customer.getBvn());
-        System.out.println("Phone Number: " + customer.getPhoneNumber());
-        System.out.println("Email Address: " + customer.getEmailAddress());
-    }
+	if (decimal) {
+		output_array.push(".");
+		output_array.push(decimal);
+	}
+
+	return output_array.join("");
+}
+
+function ValidateInput (value) {
+	let last_input = input.slice(-1);
+	let operators = ["+", "-", "*", "/"];
+
+	if (value == "." && last_input == ".") {
+		return false;
+	}
+
+	if (operators.includes(value)) {
+		if (operators.includes(last_input)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	return true;
+}
+
+function PerpareInput (input) {
+	let input_array = input.split("");
+
+	for (let i = 0; i < input_array.length; i++) {
+		if (input_array[i] == "%") {
+			input_array[i] = "/100";
+		}
+	}
+
+	return input_array.join("");
 }
