@@ -1,24 +1,68 @@
-# Compiled class file
-*.class
+gram representing the Customer class with the specified attributes:
+import java.time.LocalDate;
 
-# Log file
-*.log
+public class Customer {
+    // Attributes
+    private int customerId;
+    private String customerName;
+    private String accountNumber;
+    private LocalDate dateOfBirth;
+    private String bvn;
+    private String phoneNumber;
+    private String emailAddress;
 
-# BlueJ files
-*.ctxt
+    // Constructor
+    public Customer(int customerId, String customerName, String accountNumber, LocalDate dateOfBirth, String bvn, String phoneNumber, String emailAddress) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.accountNumber = accountNumber;
+        this.dateOfBirth = dateOfBirth;
+        this.bvn = bvn;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+    }
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+    // Getter methods
+    public int getCustomerId() {
+        return customerId;
+    }
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+    public String getCustomerName() {
+        return customerName;
+    }
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public String getBvn() {
+        return bvn;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        // Create a customer object
+        Customer customer = new Customer(1, "John Doe", "1234567890", LocalDate.of(1990, 5, 15), "12345678901234567", "123-456-7890", "john.doe@example.com");
+
+        // Print customer details
+        System.out.println("Customer ID: " + customer.getCustomerId());
+        System.out.println("Customer Name: " + customer.getCustomerName());
+        System.out.println("Account Number: " + customer.getAccountNumber());
+        System.out.println("Date of Birth: " + customer.getDateOfBirth());
+        System.out.println("BVN: " + customer.getBvn());
+        System.out.println("Phone Number: " + customer.getPhoneNumber());
+        System.out.println("Email Address: " + customer.getEmailAddress());
+    }
+}
